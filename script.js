@@ -1,12 +1,11 @@
 // Assignment code here
-//password parameter class that stores the values from the user.
-
-//character tuple class with a character and a position (string index)
-class characterTuple{
-  character;
-  position;
+//character tuple class with a character set and a boolean for if thats set was used in the password or not
+class charSetTuple{
+  charset;
+  isUsed;
 }
 
+//password parameter class that stores the values from the user.
 var passwordParameters = {
   passwordLength: "",
   includeLowerCase: false,
@@ -43,56 +42,69 @@ var passwordParameters = {
   }
 }
 
+//password manager class that keeps track of which character sets have been used and whether or not password meets acceptance criteria.
+class passwordSetsManager{
+  sets = [];
+  passwordMeetsCriteria() {
+    for(var i = 0; i < this.sets.length; i++){
+      if(!this.sets[i].isUsed){
+        return false;
+      }
+    }
+    return true;
+  }
+  selectSets(){
+    if(passwordParameters.includeLowerCase == true){
+      var tuple = new charSetTuple();
+      tuple.charset = "abcdefghijklmnopqrstuvwxyz";
+      tuple.isUsed = false;
+      this.sets.push(tuple);
+    }
+    if(passwordParameters.includeUpperCase == true){
+      var tuple = new charSetTuple();
+      tuple.charset = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+      tuple.isUsed = false;
+      this.sets.push(tuple);
+    }
+    if(passwordParameters.includeNumerics == true){
+      var tuple = new charSetTuple();
+      tuple.charset = "0123456789";
+      tuple.isUsed = false;
+      this.sets.push(tuple);
+    }
+    if(passwordParameters.includeSpecial){
+      var tuple = new charSetTuple();
+      tuple.charset = " !#$%&'()*+,-./:;<=>?@[\]^_`{|}~" + '"';
+      tuple.isUsed = false;
+      this.sets.push(tuple);
+    }
+  }
+}
 
 var generatePassword = function (){
   passwordParameters.getPasswordParametersFromUser();
   var password = [];
-  var characters = "";
-  var charsets = [];
-  var singleChars = [];
-  if(passwordParameters.includeLowerCase == true){
-    characters += "abcdefghijklmnopqrstuvwxyz";
-    charsets.push("abcdefghijklmnopqrstuvwxyz");
-  }
-  if(passwordParameters.includeUpperCase == true){
-    characters += "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-    charsets.push("ABCDEFGHIJKLMNOPQRSTUVWXYZ");
-  }
-  if(passwordParameters.includeNumerics == true){
-    characters += "0123456789";
-    charsets.push("0123456789"); 
-  }
-  if(passwordParameters.includeSpecial){
-    characters += " !#$%&'()*+,-./:;<=>?@[\]^_`{|}~" + '"';
-    charsets.push(" !#$%&'()*+,-./:;<=>?@[\]^_`{|}~" + '"'); 
-  }
-
-
-  //use a series of character tuples with randomized characters from each set and a random position within the string.
-  //This will guarantee that the password will have at least one character from each set the user selects.
-  var offset = Math.floor(Math.random()*passwordParameters.passwordLength);
-  for(var i = 0; i< charsets.length; i++){
-    var character = Math.floor(Math.random()*charsets[i].length);
-    var pos = (offset + i)%passwordParameters.passwordLength; // used this method to make sure the same position isn't accidentally selected.
-    var tuple = new characterTuple();
-    tuple.character = charsets[i][character];
-    tuple.position = pos;
-    singleChars.push(tuple);
+  var setManager = new passwordSetsManager();
+  setManager.selectSets()
+  while(1){
+      //generate some random characters
+    for(var i = 0; i < passwordParameters.passwordLength; i++){
+      //use a random nunmber to pick which charset to use
+      var whichSet = Math.floor(Math.random()*setManager.sets.length);
+      setManager.sets[whichSet].isUsed = true;
+      //pick randomly from chosen charset
+      var length = setManager.sets[whichSet].charset.length;
+      password.push(setManager.sets[whichSet].charset[Math.floor(Math.random()*length)]);
+    }
+    if(setManager.passwordMeetsCriteria()){
+     //if password meets criteria (meaning it contains members of all of the charsets the user selected), 
+     //break the while loop and return the password.
+      break;
+    }
+    //otherwise, keep generating passwords until one meets the criteria (clear password array and start again).
+    password.length = 0;
   }
 
-
-  //generate some random characters
-  for(var i = 0; i < passwordParameters.passwordLength; i++){
-    password.push(characters[Math.floor(Math.random()*characters.length)]);
-  }
-
-  //add in the character tuples 
-  for(var i = 0; i<singleChars.length; i++){
-    //password[singleChars[i].position] = singleChars[i].character;
-    console.log(singleChars[i].character, singleChars[i].position);
-    password[singleChars[i].position] = singleChars[i].character
-
-  }
   var str = password.toString().replaceAll(',','');
 
   return str;
