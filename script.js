@@ -22,10 +22,16 @@ var passwordParameters = {
         break;
       }
     }
-    this.includeLowerCase = window.confirm("Do you want to include lowercase letters?");
-    this.includeUpperCase = window.confirm("Do you want to include uppercase letters?");
-    this.includeNumerics = window.confirm("Do you want to include numeric charcaters?");
-    this.includeSpecial = window.confirm("Do you want to include special characters?");
+    while(1){
+      this.includeLowerCase = window.confirm("Do you want to include lowercase letters?");
+      this.includeUpperCase = window.confirm("Do you want to include uppercase letters?");
+      this.includeNumerics = window.confirm("Do you want to include numeric charcaters?");
+      this.includeSpecial = window.confirm("Do you want to include special characters?");
+      if(this.includeLowerCase || this.includeUpperCase || this.includeSpecial || this.includeNumerics){
+        break;
+      }
+      window.alert("You need to include at least one character option.");
+    }
     return;
   }
 }
