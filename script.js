@@ -1,5 +1,12 @@
 // Assignment code here
 //password parameter class that stores the values from the user.
+
+//character tuple class with a character and a position (string index)
+class characterTuple{
+  character;
+  position;
+}
+
 var passwordParameters = {
   passwordLength: "",
   includeLowerCase: false,
@@ -41,23 +48,45 @@ var generatePassword = function (){
   passwordParameters.getPasswordParametersFromUser();
   var password = "";
   var characters = "";
-
+  var charsets = [];
+  var singleChars = [];
   if(passwordParameters.includeLowerCase == true){
     characters += "abcdefghijklmnopqrstuvwxyz";
+    charsets.push("abcdefghijklmnopqrstuvwxyz");
   }
   if(passwordParameters.includeUpperCase == true){
     characters += "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    charsets.push("ABCDEFGHIJKLMNOPQRSTUVWXYZ");
   }
   if(passwordParameters.includeNumerics == true){
     characters += "0123456789";
+    charsets.push("0123456789"); 
   }
   if(passwordParameters.includeSpecial){
     characters += " !#$%&'()*+,-./:;<=>?@[\]^_`{|}~" + '"';
+    charsets.push(" !#$%&'()*+,-./:;<=>?@[\]^_`{|}~" + '"'); 
   }
 
+
+  //use a series of character tuples with randomized characters from each set and a random position within the string.
+  //This will guarantee that the password will have at least one character from each set the user selects.
+  for(var i = 0; i< charsets.length; i++){
+    var character = Math.floor(Math.random()*charsets[i].length);
+    var position = Math.floor(Math.random()*passwordParameters.passwordLength);
+    var tuple = new characterTuple();
+    tuple.character = charsets[i][character];
+    tuple.postiion = position;
+    singleChars.push(tuple);
+  }
+
+  //generate some random characters
   for(var i = 0; i < passwordParameters.passwordLength; i++){
-    //generate random characters here!
     password += characters[Math.floor(Math.random()*characters.length)];
+  }
+
+  //add in the character tuples 
+  for(var i = 0; i<singleChars.length; i++){
+    password[singleChars[i].position] = singleChars[i].character;
   }
   return password;
 }
