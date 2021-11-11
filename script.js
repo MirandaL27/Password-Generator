@@ -46,7 +46,7 @@ var passwordParameters = {
 
 var generatePassword = function (){
   passwordParameters.getPasswordParametersFromUser();
-  var password = "";
+  var password = [];
   var characters = "";
   var charsets = [];
   var singleChars = [];
@@ -70,25 +70,32 @@ var generatePassword = function (){
 
   //use a series of character tuples with randomized characters from each set and a random position within the string.
   //This will guarantee that the password will have at least one character from each set the user selects.
+  var offset = Math.floor(Math.random()*passwordParameters.passwordLength);
   for(var i = 0; i< charsets.length; i++){
     var character = Math.floor(Math.random()*charsets[i].length);
-    var position = Math.floor(Math.random()*passwordParameters.passwordLength);
+    var pos = (offset + i)%passwordParameters.passwordLength; // used this method to make sure the same position isn't accidentally selected.
     var tuple = new characterTuple();
     tuple.character = charsets[i][character];
-    tuple.postiion = position;
+    tuple.position = pos;
     singleChars.push(tuple);
   }
 
+
   //generate some random characters
   for(var i = 0; i < passwordParameters.passwordLength; i++){
-    password += characters[Math.floor(Math.random()*characters.length)];
+    password.push(characters[Math.floor(Math.random()*characters.length)]);
   }
 
   //add in the character tuples 
   for(var i = 0; i<singleChars.length; i++){
-    password[singleChars[i].position] = singleChars[i].character;
+    //password[singleChars[i].position] = singleChars[i].character;
+    console.log(singleChars[i].character, singleChars[i].position);
+    password[singleChars[i].position] = singleChars[i].character
+
   }
-  return password;
+  var str = password.toString().replaceAll(',','');
+
+  return str;
 }
 
 // Get references to the #generate element
