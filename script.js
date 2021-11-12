@@ -19,7 +19,7 @@ var passwordParameters = {
         window.alert("please enter a number between 8 and 128.");
       }
       else if(this.passwordLength < 8){
-        window.alert("the password length must be ast least 8 characters long.");
+        window.alert("the password length must be at least 8 characters long.");
       }
       else if (this.passwordLength > 128){
         window.alert("The passowrd length must be 128 characters or less.");
@@ -29,10 +29,10 @@ var passwordParameters = {
       }
     }
     while(1){
-      this.includeLowerCase = window.confirm("Do you want to include lowercase letters?");
-      this.includeUpperCase = window.confirm("Do you want to include uppercase letters?");
-      this.includeNumerics = window.confirm("Do you want to include numeric charcaters?");
-      this.includeSpecial = window.confirm("Do you want to include special characters?");
+      this.includeLowerCase = window.confirm("Press OK if you want to include lowercase letters.");
+      this.includeUpperCase = window.confirm("Press OK if you want to include uppercase letters.");
+      this.includeNumerics = window.confirm("Press OK if you want to include numeric charcaters.");
+      this.includeSpecial = window.confirm("Press OK if you want to include special characters.");
       if(this.includeLowerCase || this.includeUpperCase || this.includeSpecial || this.includeNumerics){
         break;
       }
