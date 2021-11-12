@@ -13,6 +13,7 @@ var passwordParameters = {
   includeNumerics: false,
   includeSpecial: false,
   getPasswordParametersFromUser(){
+    //keep showing prompt about password length until valid input is given.
     while(1){
       this.passwordLength = window.prompt("Type in a password length, it must be between 8 and 128 characters.");
       if(!this.passwordLength || isNaN(this.passwordLength)){
@@ -28,6 +29,7 @@ var passwordParameters = {
         break;
       }
     }
+    //keep showing prompts about character sets until user selects OK for at least one of them.
     while(1){
       this.includeLowerCase = window.confirm("Press OK if you want to include lowercase letters.");
       this.includeUpperCase = window.confirm("Press OK if you want to include uppercase letters.");
@@ -46,6 +48,7 @@ var passwordParameters = {
 class passwordSetsManager{
   sets = [];
   passwordMeetsCriteria() {
+    //check that all of the user's charsets have been used (they should all have a isUsed value of true)
     for(var i = 0; i < this.sets.length; i++){
       if(!this.sets[i].isUsed){
         return false;
@@ -54,6 +57,7 @@ class passwordSetsManager{
     return true;
   }
   selectSets(){
+    //add elements to the sets array for every charset the user selected.
     if(passwordParameters.includeLowerCase == true){
       var tuple = new charSetTuple();
       tuple.charset = "abcdefghijklmnopqrstuvwxyz";
